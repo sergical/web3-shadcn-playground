@@ -1,16 +1,25 @@
-import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
+import "./globals.css";
 
 import {
   DynamicContextProvider,
-  EthereumWalletConnectors,
   DynamicWagmiConnector,
-} from "../lib/dynamic";
+  EthereumWalletConnectors,
+} from "@/lib/dynamic";
+import { headers } from "next/headers";
+import { cookieToInitialState } from "wagmi";
 
+import { ModeToggle } from "@/components/mode-toggle";
+import { cn } from "@/lib/utils";
+import { config } from "@/lib/wagmi";
 import { Providers } from "./providers";
+import { ThemeProvider } from "./theme-provider";
 
-const inter = Inter({ subsets: ["latin"] });
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,20 +31,36 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const initialState = cookieToInitialState(config, headers().get("cookie"));
   return (
-    <html lang="en">
-      <DynamicContextProvider
-        settings={{
-          environmentId: "2762a57b-faa4-41ce-9f16-abff9300e2c9",
-          walletConnectors: [EthereumWalletConnectors],
-        }}
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
       >
-        <Providers>
-          <DynamicWagmiConnector>
-            <body className={inter.className}>{children}</body>
-          </DynamicWagmiConnector>
-        </Providers>
-      </DynamicContextProvider>
+        <DynamicContextProvider
+          settings={{
+            environmentId: process.env.DYNAMIC_ENVIRONMENT_ID || "",
+            walletConnectors: [EthereumWalletConnectors],
+          }}
+        >
+          <Providers initialState={initialState}>
+            <DynamicWagmiConnector>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <ModeToggle />
+                {children}
+              </ThemeProvider>
+            </DynamicWagmiConnector>
+          </Providers>
+        </DynamicContextProvider>
+      </body>
     </html>
   );
 }
