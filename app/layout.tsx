@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 
+import { Toaster } from "@/components/ui/sonner";
 import {
   DynamicContextProvider,
   DynamicWagmiConnector,
@@ -60,6 +61,7 @@ export default function RootLayout({
             </DynamicWagmiConnector>
           </Providers>
         </DynamicContextProvider>
+        <Toaster />
       </body>
     </html>
   );
