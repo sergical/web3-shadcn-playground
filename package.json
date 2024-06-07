@@ -13,7 +13,7 @@
     "@dynamic-labs/ethereum": "2.1.1",
     "@dynamic-labs/sdk-react-core": "2.1.1",
     "@dynamic-labs/wagmi-connector": "2.1.1",
-    "@hookform/resolvers": "^3.3.4",
+    "@hookform/resolvers": "^3.6.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
